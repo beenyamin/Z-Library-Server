@@ -76,11 +76,32 @@ async function run() {
 
 
 
-
-
-
-
       // add
+
+      app.post ('/borrowItem', async (req, res) => {
+        const newPost = req.body;
+        const result = await addCollection.insertOne(newPost);
+        res.send(result);
+    })
+  
+        app.get('/borrowItem', async (req, res) => {
+          const cursor = addCollection.find();
+          const result = await cursor.toArray();
+          res.send(result);
+      })
+
+      app.delete('/borrowItem/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await addCollection.deleteOne(query);
+        res.send(result)
+  
+    })
+
+
+  
+
+
   
   
       await client.db("admin").command({ ping: 1 });
