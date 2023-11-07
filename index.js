@@ -24,9 +24,40 @@ async function run() {
   
       await client.connect();
       
-      const bookCollection = client.db ('libraryDB').collection('allBooks');
+      const bookCollection = client.db ('libraryDB').collection('allBooks');    
       const addCollection = client.db ('libraryDB').collection('add');       
   
+      app.get ('/book', async (req,res) => {
+        const cursor = bookCollection.find ();
+        const result = await cursor.toArray ();
+        res.send (result)
+  
+      })
+  
+      app.get('/book/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await bookCollection.findOne(query)
+        res.send(result);
+    })
+
+
+
+      app.post ('/book', async (req,res) => {
+        const newProDuct = req.body ;       
+        const result = await bookCollection.insertOne (newProDuct);
+        res.send (result);
+        
+    }) 
+
+
+
+
+
+
+
+
+
       // add
   
   
