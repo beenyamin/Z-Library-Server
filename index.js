@@ -44,11 +44,33 @@ async function run() {
 
 
       app.post ('/book', async (req,res) => {
-        const newProDuct = req.body ;       
-        const result = await bookCollection.insertOne (newProDuct);
+        const newBook = req.body ;       
+        const result = await bookCollection.insertOne (newBook);
         res.send (result);
         
     }) 
+
+
+    app.put('/book/:id' , async (req,res) =>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const options = { upsert: true };
+      const updatedBook = req.body;
+      const Product = {
+        $set:{
+          name: updatedBook.name,
+          image: updatedBook.image,
+          authorName : updatedBook.authorName,
+          category: updatedBook.category,
+          quantity: updatedBook.quantity,
+          description: updatedBook.description,
+          rating: updatedBook.rating
+
+        }
+      }
+         const result = await bookCollection.updateOne(filter,Product,options)
+          res.send(result);
+    })
 
 
 
