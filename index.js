@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({
   origin: 
   [
-    // 'http://localhost:5173'
+    'http://localhost:5173',
     'https://assignment-11-fbabf.web.app',
     'https://assignment-11-fbabf.firebaseapp.com/'
        
@@ -71,7 +71,7 @@ const logger = async (req, res, next) => {
 async function run() {
   try {
 
-    await client.connect();
+    // await client.connect();
 
     const bookCollection = client.db('libraryDB').collection('allBooks');
     const addCollection = client.db('libraryDB').collection('add');
@@ -116,10 +116,17 @@ async function run() {
       res.send(result);
     })
 
+    app.post('/book', async (req, res) => {
+      const newBook = req.body;
+      const result = await bookCollection.insertOne(newBook);
+      res.send(result);
+
+    })
+
 
     //token get
 
-    app.get('/book', logger, verifyToken, async (req, res) => {
+    app.get('/book/api', logger, verifyToken, async (req, res) => {
       console.log(req.query.email);
       console.log('tok tok token', req.user)
       if (req.user.email !== req.query.email) {
@@ -138,12 +145,7 @@ async function run() {
 
 
 
-    app.post('/book', async (req, res) => {
-      const newBook = req.body;
-      const result = await bookCollection.insertOne(newBook);
-      res.send(result);
-
-    })
+   
 
 
     app.put('/book/:id', async (req, res) => {
